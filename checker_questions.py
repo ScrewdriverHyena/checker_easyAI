@@ -177,7 +177,8 @@ class Checker(TwoPlayerGame):
          [W,0,W,0,W,0,W,0]]
         ------
         """
-        self.board = self.get_piece_pos_from_table(pos)
+
+        self.players[self.current_player-1].pos = self.get_piece_pos_from_table(pos)
 
     def lose(self):
         """
@@ -185,16 +186,23 @@ class Checker(TwoPlayerGame):
         white lose if black piece is in black territory
         """
 
-        if self.current_player == 1:
+        current_player_territory = self.white_territory if self.current_player == 1 else self.black_territory
+        current_enemy_piece = 'B' if self.current_player == 1 else 'W'
+
+        """if self.current_player == 1:
             current_player_territory = self.white_territory
             current_enemy_piece = 'B'
         else:
             current_player_territory = self.black_territory
-            current_enemy_piece = 'W'
+            current_enemy_piece = "W"
+            """
 
+        board = self.blank_board.copy()
         for (p,l) in zip(self.players, ["W", "B"]):
             for x,y in p.pos:
-                if self.board[x,y] == current_enemy_piece:
+                board[x,y] = l
+
+                if (x,y) in current_player_territory and l == current_enemy_piece:
                     return True
 
         return False
