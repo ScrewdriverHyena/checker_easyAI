@@ -18,7 +18,7 @@ class Checker(TwoPlayerGame):
 
     def __init__(self, players):
         self.players = players
-        # self.board = np.arange(8 * 8).reshape(8,8)
+        self.board = np.arange(8 * 8).reshape(8,8)
         self.blank_board = np.zeros((8,8), dtype=object)
         self.board = self.blank_board.copy()
         self.black_pieces = [
@@ -36,7 +36,6 @@ class Checker(TwoPlayerGame):
 
         self.white_territory = [(7,0), (7,2), (7,4), (7,6)]
         self.black_territory = [(0,1), (0,3), (0,5), (0,7)]
-
 
         self.players[0].pos = self.white_pieces
         self.players[1].pos = self.black_pieces
@@ -178,20 +177,33 @@ class Checker(TwoPlayerGame):
          [W,0,W,0,W,0,W,0]]
         ------
         """
-        pass
+        self.board = self.get_piece_pos_from_table(pos)
 
     def lose(self):
         """
         black lose if white piece is in black territory
         white lose if black piece is in black territory
         """
-        pass
+
+        if self.current_player == 1:
+            current_player_territory = self.white_territory
+            current_enemy_piece = 'B'
+        else:
+            current_player_territory = self.black_territory
+            current_enemy_piece = 'W'
+
+        for (p,l) in zip(self.players, ["W", "B"]):
+            for x,y in p.pos:
+                if self.board[x,y] == current_enemy_piece:
+                    return True
+
+        return False
 
     def is_over(self):
         """
         game is over immediately when one player get one of its piece into opponent's territory.
         """
-        pass
+        return self.lose()
 
     def show(self):
         """
@@ -209,11 +221,12 @@ class Checker(TwoPlayerGame):
         print(board)
 
     def scoring(self):
-       """
-       win = 0
-       lose = -100
-       """
-       pass
+        """
+        win = 0
+        lose = -100
+        """
+        return -100 if self.lose() else 0
+
 
 if __name__ == "__main__":
     ai = Negamax(1) # The AI will think 13 moves in advance

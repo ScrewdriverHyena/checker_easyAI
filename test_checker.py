@@ -1,5 +1,5 @@
 from easyAI import Human_Player, AI_Player
-from checker import Checker, black_squares
+from checker_questions import Checker, black_squares
 import pytest
 import numpy as np
 
